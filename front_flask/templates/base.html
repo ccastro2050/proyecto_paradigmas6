@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}Facturas{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='estilos.css') }}">
+</head>
+<body>
+
+  <header>
+    <div class="contenedor barra">
+      <a class="marca" href="{{ url_for('inicio') }}">Facturas</a>
+      <nav>
+        {# El menú sale de entidades.py, no de una lista escrita aparte que
+           habría que acordarse de actualizar al agregar una entidad. #}
+        {% for e in entidades %}
+          <a href="{{ url_for('listar', entidad=e.nombre) }}">{{ e.titulo }}</a>
+        {% endfor %}
+        {# Factura va aparte porque NO es un CRUD: tiene rutas propias. #}
+        <a href="{{ url_for('facturas') }}">Facturas</a>
+      </nav>
+      <span class="version">front v6</span>
+    </div>
+  </header>
+
+  <main class="contenedor">
+
+    {% with avisos = get_flashed_messages(with_categories=true) %}
+      {% for categoria, mensaje in avisos %}
+        <p class="aviso {{ categoria }}">{{ mensaje }}</p>
+      {% endfor %}
+    {% endwith %}
+
+    {% block contenido %}{% endblock %}
+
+  </main>
+
+  <footer class="contenedor">
+    <p>
+      Este front <strong>no toca la base de datos</strong>: todo lo pide a la
+      API. Si la API está caída, aquí no hay datos &mdash; y esa es la prueba
+      de que la separación es real.
+    </p>
+  </footer>
+
+</body>
+</html>
